@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sally van den Berg's Music School — Sheet Music Library</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fff6e8;
+    --bg-glow: #ffe9c7;
+    --card: #ffffff;
+    --ink: #2b1d10;
+    --muted: #8a6b4a;
+    --amber: #f2a736;
+    --amber-soft: #ffcf6b;
+    --teal: #1f9e93;
+    --coral: #ec5f4c;
+    --plum: #8b3a62;
+    --border: #f0d4a0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 12% 8%, rgba(242,167,54,0.30), transparent 40%),
+      radial-gradient(circle at 88% 12%, rgba(31,158,147,0.25), transparent 42%),
+      radial-gradient(circle at 50% 100%, rgba(236,95,76,0.16), transparent 55%),
+      var(--bg);
+    min-height: 100vh;
+  }
+  header {
+    padding: 64px 24px 40px;
+    text-align: center;
+  }
+  .kicker {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72em;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 14px;
+  }
+  .kicker sub {
+    font-size: 0.7em;
+    vertical-align: baseline;
+    bottom: -0.15em;
+    position: relative;
+  }
+  header h1 {
+    margin: 0 0 10px;
+    font-family: 'Fraunces', Georgia, serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-size: 2.6em;
+    letter-spacing: -0.5px;
+    background: linear-gradient(100deg, var(--coral), var(--amber) 45%, var(--teal) 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  header p {
+    margin: 0;
+    font-size: 0.98em;
+    color: var(--muted);
+  }
+  .controls {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px 28px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+  .controls-inner {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(139,58,98,0.12);
+    padding: 16px 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+  #search {
+    flex: 1 1 220px;
+    padding: 11px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    font-size: 0.95em;
+    font-family: 'Inter', sans-serif;
+    background: #fffdf8;
+    color: var(--ink);
+  }
+  #search::placeholder { color: var(--muted); }
+  #search:focus { outline: none; border-color: var(--coral); }
+  .grade-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .grade-filters button {
+    border: 1.5px solid var(--border);
+    background: #fffdf8;
+    color: var(--muted);
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 0.82em;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.15s;
+  }
+  .grade-filters button:nth-child(6n+1):hover, .grade-filters button:nth-child(6n+1).active { --btn-color: var(--coral); }
+  .grade-filters button:nth-child(6n+2):hover, .grade-filters button:nth-child(6n+2).active { --btn-color: var(--amber); }
+  .grade-filters button:nth-child(6n+3):hover, .grade-filters button:nth-child(6n+3).active { --btn-color: var(--teal); }
+  .grade-filters button:nth-child(6n+4):hover, .grade-filters button:nth-child(6n+4).active { --btn-color: var(--plum); }
+  .grade-filters button:nth-child(6n+5):hover, .grade-filters button:nth-child(6n+5).active { --btn-color: var(--coral); }
+  .grade-filters button:nth-child(6n+6):hover, .grade-filters button:nth-child(6n+6).active { --btn-color: var(--amber); }
+  .grade-filters button:hover { color: var(--ink); border-color: var(--btn-color, var(--coral)); }
+  .grade-filters button.active {
+    background: var(--btn-color, var(--coral));
+    color: #fff;
+    border-color: transparent;
+    font-weight: 700;
+  }
+  main {
+    max-width: 960px;
+    margin: 8px auto 60px;
+    padding: 0 20px;
+  }
+  .grade-section { margin-bottom: 40px; }
+  .grade-heading {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent, var(--teal));
+    margin-bottom: 16px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .grade-heading .count {
+    font-weight: 400;
+    color: var(--muted);
+    text-transform: none;
+    letter-spacing: normal;
+  }
+  .song-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 12px;
+  }
+  .song-card {
+    display: block;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent, var(--amber));
+    border-radius: 12px;
+    padding: 16px 18px;
+    text-decoration: none;
+    color: var(--ink);
+    box-shadow: 0 2px 10px rgba(43,29,16,0.05);
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  }
+  .song-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(43,29,16,0.14);
+  }
+  .song-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    font-size: 1.05em;
+    line-height: 1.35;
+  }
+  .song-meta {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72em;
+    color: var(--muted);
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+  #empty-state {
+    display: none;
+    text-align: center;
+    color: var(--muted);
+    padding: 40px 0;
+  }
+  #result-count {
+    font-size: 0.85em;
+    color: var(--muted);
+    margin: 0 0 18px;
+  }
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.8em;
+    padding: 24px 20px 40px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Piano Lessons &middot; 1970<sub>s</sub>&ndash;1980<sub>s</sub></div>
+  <h1>Sally's Music School</h1>
+  <p>A lifetime of arrangements, all in one place</p>
+</header>
+
+<div class="controls">
+  <div class="controls-inner">
+    <input type="text" id="search" placeholder="Search by song title...">
+    <div class="grade-filters" id="grade-filters"></div>
+  </div>
+</div>
+
+<main>
+  <p id="result-count"></p>
+  <div id="library"></div>
+  <div id="empty-state">No pieces match your search.</div>
+</main>
+
+<footer>94 pieces &middot; Grades 0&ndash;5 &middot; Click any title to open the original sheet music</footer>
+
+<script>
+const SONGS = [{"grade": 0, "title": "Aquarius", "file": "0 Aquarius.pdf"}, {"grade": 0, "title": "Ballade for Love", "file": "0 Ballade for Love.pdf"}, {"grade": 0, "title": "Brahms Lullaby", "file": "0 Brahms Lullaby.pdf"}, {"grade": 0, "title": "Ek verlang na jou", "file": "0 Ek verlang na jou.pdf"}, {"grade": 0, "title": "Exodus Song", "file": "0 Exodus Song.pdf"}, {"grade": 0, "title": "Goeie Nag", "file": "0 Goeie Nag.pdf"}, {"grade": 0, "title": "Hansie Slim", "file": "0 Hansie Slim.pdf"}, {"grade": 0, "title": "Hartseer Wals", "file": "0 Hartseer Wals.pdf"}, {"grade": 0, "title": "Hawermout", "file": "0 Hawermout.pdf"}, {"grade": 0, "title": "Hi-Lili, Hi-Lo", "file": "0 Hi-lily Hi-L.pdf"}, {"grade": 0, "title": "I'd like to teach the world to sing", "file": "0 I_d like to teach the world to sing.pdf"}, {"grade": 0, "title": "I'll see you again", "file": "0 I_ll see you again.pdf"}, {"grade": 0, "title": "Let Me Call You Sweetheart", "file": "0 Let me call you sweat heart.pdf"}, {"grade": 0, "title": "Master Jack", "file": "0 Master Jack.pdf"}, {"grade": 0, "title": "Michael Row the Boat Ashore", "file": "0 Michael row the boat ashore.pdf"}, {"grade": 0, "title": "Mona Lisa", "file": "0 Mona Lisa.pdf"}, {"grade": 0, "title": "My Bonnie", "file": "0 My Bonny.pdf"}, {"grade": 0, "title": "Oh What a Beautiful Mornin'", "file": "0 Oh what a beautiful mornin_.pdf"}, {"grade": 0, "title": "People Will Say We're in Love", "file": "0 People will say we_re in love.pdf"}, {"grade": 0, "title": "Piekaninie Wiegelied", "file": "0 Piekaninie Wiegelied.pdf"}, {"grade": 0, "title": "Put Your Hand in the Hand", "file": "0 Put your hand in the hand.pdf"}, {"grade": 0, "title": "Ramaja", "file": "0 Ramaja.pdf"}, {"grade": 0, "title": "Sugar-Bush Boogie", "file": "0 Sugar-Bush Boogie.pdf"}, {"grade": 0, "title": "The Loveliest Night of the Year", "file": "0 The loveliest night of the year.pdf"}, {"grade": 0, "title": "True Love", "file": "0 True Love.pdf"}, {"grade": 0, "title": "Verjaarsdag Liedjie", "file": "0 Verjaarsdag Liedjie.pdf"}, {"grade": 1, "title": "Arrivederci Roma", "file": "1 A Rivederci Roma.pdf"}, {"grade": 1, "title": "Anniversary Song", "file": "1 Anniversary Song.pdf"}, {"grade": 1, "title": "Around the World", "file": "1 Around the World.pdf"}, {"grade": 1, "title": "Bridal March", "file": "1 Bridal March.pdf"}, {"grade": 1, "title": "Chopsticks", "file": "1 Chop Sticks.pdf"}, {"grade": 1, "title": "Edelweiss", "file": "1 Edelweiss.pdf"}, {"grade": 1, "title": "Fly Me to the Moon", "file": "1 Fly me to the moon.pdf"}, {"grade": 1, "title": "I'll Follow Him", "file": "1 I_ll follow him.pdf"}, {"grade": 1, "title": "It's Almost Tomorrow", "file": "1 It_s almost tomorrow.pdf"}, {"grade": 1, "title": "Kinders van die wind", "file": "1 Kinders van die wind.pdf"}, {"grade": 1, "title": "Laughing Samba", "file": "1 Laughing Samba.pdf"}, {"grade": 1, "title": "Liebestraum", "file": "1 Liebestraum.pdf"}, {"grade": 1, "title": "Love Is Blue", "file": "1 Love is blue.pdf"}, {"grade": 1, "title": "Midnight Snack", "file": "1 Midnight Snack.pdf"}, {"grade": 1, "title": "Skater's Waltz", "file": "1 Skaters Waltz.pdf"}, {"grade": 1, "title": "True Love", "file": "1 True Love.pdf"}, {"grade": 1, "title": "Yesterday", "file": "1 Yesterday.pdf"}, {"grade": 2, "title": "A Spoonful of Sugar", "file": "2 A spoonful of sugar.pdf"}, {"grade": 2, "title": "Amore Scusami", "file": "2 Amore Scusami.pdf"}, {"grade": 2, "title": "Bluebird of Happiness", "file": "2 Bluebird of happiness.pdf"}, {"grade": 2, "title": "Chim Chim Cher-ee", "file": "2 Chim Chim Cher-ee.pdf"}, {"grade": 2, "title": "Elizabethan Serenade", "file": "2 Elizabeth Serenade.pdf"}, {"grade": 2, "title": "Fur Elise", "file": "2 Fur Elise.pdf"}, {"grade": 2, "title": "Green Green Grass of Home", "file": "2 Green green grass of home.pdf"}, {"grade": 2, "title": "Hear My Song", "file": "2 Hear my song.pdf"}, {"grade": 2, "title": "Heart and Soul", "file": "2 Heart and Soul.pdf"}, {"grade": 2, "title": "I'll See You in My Dreams (missing page 1)", "file": "2 I_ll see you in my dreams (missing page 1).pdf"}, {"grade": 2, "title": "Isle of Capri", "file": "2 Irle of capri.pdf"}, {"grade": 2, "title": "Lawrence of Arabia", "file": "2 Lawrence of Arabia.pdf"}, {"grade": 2, "title": "Moon River", "file": "2 Moon River.pdf"}, {"grade": 2, "title": "Music to Watch Girls Go By", "file": "2 Music to watch girls go by.pdf"}, {"grade": 2, "title": "My Hero", "file": "2 My Hero.pdf"}, {"grade": 2, "title": "Never on Sunday", "file": "2 Never on Sunday.pdf"}, {"grade": 2, "title": "South of the Border", "file": "2 South of the boarder.pdf"}, {"grade": 2, "title": "Spanish Eyes", "file": "2 Spanish Eyes.pdf"}, {"grade": 2, "title": "Strangers in the Night", "file": "2 Strangers in the night.pdf"}, {"grade": 2, "title": "This Is My Prayer", "file": "2 This is my prayer.pdf"}, {"grade": 2, "title": "Too Young", "file": "2 Too Young.pdf"}, {"grade": 2, "title": "Tuxedo Junction", "file": "2 Tuxedo Junction.pdf"}, {"grade": 2, "title": "Unchained Melody", "file": "2 Unchained Melody.pdf"}, {"grade": 2, "title": "Yellow Bird", "file": "2 Yellow Bird.pdf"}, {"grade": 2, "title": "Zorba's Dance", "file": "2 Zorba_s Dance.pdf"}, {"grade": 3, "title": "A Man and a Woman", "file": "3 A man and a woman.pdf"}, {"grade": 3, "title": "An Affair to Remember", "file": "3 An affair to remember.pdf"}, {"grade": 3, "title": "Baby Elephant Walk", "file": "3 Baby Elephant Walk.pdf"}, {"grade": 3, "title": "Brazil", "file": "3 Brazil.pdf"}, {"grade": 3, "title": "Can't Help Loving That Man", "file": "3 Can_t help loving that man.pdf"}, {"grade": 3, "title": "Downtown", "file": "3 Down Town.pdf"}, {"grade": 3, "title": "Exodus", "file": "3 Exodus.pdf"}, {"grade": 3, "title": "Hernando's Hideaway", "file": "3 Hernardo_s Hideaway.pdf"}, {"grade": 3, "title": "In Spain They Say Si Si", "file": "3 In spain they say si si.pdf"}, {"grade": 3, "title": "Lara's Theme", "file": "3 Lara_s Theme.pdf"}, {"grade": 3, "title": "Largo", "file": "3 Largo.pdf"}, {"grade": 3, "title": "Like, Long Hair", "file": "3 Like long hair rock and roll.pdf"}, {"grade": 3, "title": "Night", "file": "3 Night.pdf"}, {"grade": 3, "title": "Pepito", "file": "3 Pepito.pdf"}, {"grade": 3, "title": "Peter Gunn", "file": "3 Peter Gun.pdf"}, {"grade": 3, "title": "Sabre Dance", "file": "3 Sabre Dance.pdf"}, {"grade": 3, "title": "Soda Pop", "file": "3 Soda pop.pdf"}, {"grade": 3, "title": "Tonight", "file": "3 Tonight.pdf"}, {"grade": 4, "title": "Autumn Concerto", "file": "4 Autumn Concerto.pdf"}, {"grade": 4, "title": "Autumn Leaves", "file": "4 Autumn Leaves.pdf"}, {"grade": 4, "title": "Concerto No 2 - Tchaikovsky", "file": "4 Concerto No 2 - Tchaikovsky.pdf"}, {"grade": 4, "title": "Russian Melodies", "file": "4 Russian Melodies.pdf"}, {"grade": 4, "title": "The Dream of Olwen", "file": "4 The dream of Olwen.pdf"}, {"grade": 4, "title": "To Love Again", "file": "4 To love again.pdf"}, {"grade": 4, "title": "Warsaw Concerto", "file": "4 Warsaw Concerto.pdf"}, {"grade": 5, "title": "Cornish Rhapsody", "file": "5 Cornish Rhapsody.pdf"}];
+const gradeLabel = g => g === 0 ? "Beginner (Grade 0)" : "Grade " + g;
+
+function render(filterText, filterGrade) {
+  const library = document.getElementById('library');
+  const emptyState = document.getElementById('empty-state');
+  const resultCount = document.getElementById('result-count');
+  library.innerHTML = '';
+
+  const text = filterText.trim().toLowerCase();
+  const filtered = SONGS.filter(s => {
+    const matchesText = !text || s.title.toLowerCase().includes(text);
+    const matchesGrade = filterGrade === 'all' || String(s.grade) === filterGrade;
+    return matchesText && matchesGrade;
+  });
+
+  resultCount.textContent = filtered.length + (filtered.length === 1 ? ' piece' : ' pieces') + ' shown';
+
+  if (filtered.length === 0) {
+    emptyState.style.display = 'block';
+    return;
+  }
+  emptyState.style.display = 'none';
+
+  const byGrade = {};
+  filtered.forEach(s => {
+    const key = s.grade;
+    if (!byGrade[key]) byGrade[key] = [];
+    byGrade[key].push(s);
+  });
+
+  const accentPalette = ['#ec5f4c', '#f2a736', '#1f9e93', '#8b3a62', '#ec5f4c', '#f2a736'];
+  Object.keys(byGrade).map(Number).sort((a,b) => a-b).forEach((g, idx) => {
+    const section = document.createElement('div');
+    section.className = 'grade-section';
+    section.style.setProperty('--accent', accentPalette[idx % accentPalette.length]);
+
+    const heading = document.createElement('div');
+    heading.className = 'grade-heading';
+    heading.innerHTML = gradeLabel(g) + ' <span class="count">(' + byGrade[g].length + ')</span>';
+    section.appendChild(heading);
+
+    const grid = document.createElement('div');
+    grid.className = 'song-grid';
+
+    byGrade[g].sort((a,b) => a.title.localeCompare(b.title)).forEach(s => {
+      const a = document.createElement('a');
+      a.className = 'song-card';
+      a.href = encodeURI(s.file);
+      a.target = '_blank';
+      a.innerHTML = '<div class="song-title">' + s.title + '</div><div class="song-meta">' + gradeLabel(s.grade) + '</div>';
+      grid.appendChild(a);
+    });
+
+    section.appendChild(grid);
+    library.appendChild(section);
+  });
+}
+
+// build grade filter buttons
+const grades = [...new Set(SONGS.map(s => s.grade))].sort((a,b) => a-b);
+const filterBar = document.getElementById('grade-filters');
+const allBtn = document.createElement('button');
+allBtn.textContent = 'All';
+allBtn.className = 'active';
+allBtn.dataset.grade = 'all';
+filterBar.appendChild(allBtn);
+grades.forEach(g => {
+  const btn = document.createElement('button');
+  btn.textContent = gradeLabel(g).replace('Beginner (Grade 0)', 'Grade 0');
+  btn.dataset.grade = String(g);
+  filterBar.appendChild(btn);
+});
+
+let currentGrade = 'all';
+filterBar.addEventListener('click', e => {
+  if (e.target.tagName !== 'BUTTON') return;
+  filterBar.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  currentGrade = e.target.dataset.grade;
+  render(document.getElementById('search').value, currentGrade);
+});
+
+document.getElementById('search').addEventListener('input', e => {
+  render(e.target.value, currentGrade);
+});
+
+render('', 'all');
+</script>
+
+</body>
+</html>
